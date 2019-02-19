@@ -1,0 +1,58 @@
+clear all;
+close all;
+
+I1=double(imread(’hardwood.jpeg’));
+aa1=imresize(I1(:,:,1),[256 256]);
+figure;imshow(aa1,[]);
+
+kk=1;nn=8;
+for ii=1:8:256
+  for jj=1:8:256
+    bb1=aa1(ii:ii+7,jj:jj+7);
+    cc1(kk,:)=reshape(bb1,1,64);
+    kk=kk+1;
+  end
+end
+csvwrite(’hardwood.csv’,cc1);
+bt=csvread(’hardwood.csv’);
+
+I2=double(imread(’carpet.jpeg’));
+aa2=imresize(I2(:,:,1),[256 256]);
+figure;imshow(aa2,[]);
+
+kk=1;
+for ii=1:8:256
+  for jj=1:8:256
+    bb2=aa2(ii:ii+7,jj:jj+7);
+    cc2(kk,:)=reshape(bb2,1,64);
+    kk=kk+1;
+  end
+end
+csvwrite(’carpet.csv’,cc2);
+ct=csvread(’carpet.csv’);
+
+mcc1=mean(bt);
+scc1=std(bt);
+
+mcc2=mean(ct);
+scc2=std(ct);
+
+figure;plot(mcc1);hold on;plot(mcc2,’color’,’red’);grid on;
+xlabel(’Feature Numbers’);ylabel(’Mean Values’);
+figure;plot(scc1);hold on;plot(scc2,’color’,’red’);grid on;
+xlabel(’Feature Numbers’);ylabel(’Std Values’);
+
+f1=1;f54=54;f59=59;
+
+figure;hist(bt(:,f1),40);grid on;
+axis([0 255 0 70]);
+figure;hist(ct(:,f1),40);grid on;
+axis([0 255 0 70]);
+
+figure;plot3(bt(:,f1),bt(:,f54),bt(:,f59),’.’);
+hold on;plot3(ct(:,f1),ct(:,f54),ct(:,f59),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 54’);zlabel(’Feature 59’);
+55
+56 figure;plot(bt(:,f1),bt(:,f54),’.’);
+57 hold on;plot(ct(:,f1),ct(:,f54),’r.’);grid on;
+58 xlabel(’Feature 1’);ylabel(’Feature 54’);

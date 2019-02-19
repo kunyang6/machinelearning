@@ -1,0 +1,59 @@
+clear all;
+close all;
+
+ht=csvread(’hardwood.csv’);
+ct=csvread(’carpet.csv’);
+
+i1=1;i2=54;i3=59;
+
+figure;plot(ht(:,i1),ht(:,i2),’.’);
+hold on;plot(ct(:,i1),ct(:,i2),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 54’);
+axis([0 220 0 220]);
+
+
+% Understand the effect of Imbalanced data
+rand(’seed’,131);
+ind=round(1024*rand(1,10))+1;
+imb1=ht(abs(ht(:,i1)-70)<10 & abs(ht(:,i2)-70)<10,:);
+imb2=ht(ind,:);
+imb=[imb1;imb2];
+
+figure;plot(imb(:,i1),imb(:,i2),’.’);
+hold on;plot(ct(:,i1),ct(:,i2),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 54’);
+axis([0 220 0 220]);
+
+
+% Understand the effect of Inaccurate data
+ind=find(ht(:,i1)<90 & ht(:,i1)>70 & ht(:,i2)<90 & ht(:,i2)>70
+   ...
+      | ht(:,i1)<120 & ht(:,i1)>110 & ht(:,i2)<120 & ht(:,i2)>110);
+
+tmpht=ht;
+tmpct=ct;
+
+tmp=tmpht(ind,:);
+tmpht(ind,:)=tmpct(ind,:);
+tmpct(ind,:)=tmp;
+
+figure;plot(tmpht(:,i1),tmpht(:,i2),’.’);
+hold on;plot(tmpct(:,i1),tmpct(:,i2),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 54’);
+axis([0 220 0 220]);
+
+% Understand the effect of Incomplete data
+tmpht=ht;
+tmpct=ct;
+
+ind=find((abs(ht(:,i1)-75)<3 | abs(ht(:,i2)-75)<3) | abs(ht(:,i1)
+   -100)<3 ...
+     | abs(ht(:,i2)-100)<3 | abs(ht(:,i1)-120)<15);
+tmpht(ind,i1)=0;
+
+h1=tmpht(tmpht(:,i1)˜=0,:);
+
+figure;plot(h1(:,i1),h1(:,i2),’.’);
+hold on;plot(ct(:,i1),ct(:,i2),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 54’);
+axis([0 220 0 220]);

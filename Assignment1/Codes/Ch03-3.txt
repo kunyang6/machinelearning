@@ -1,0 +1,62 @@
+clear all;
+close all;
+
+[num1,txt1,raw1]=xlsread(’biltmore31.csv’);
+[num2,txt2,raw2]=xlsread(’MyPrismacolors1.csv’);
+
+nn=64; alpha=0.00001;
+i1=1;i2=22;i3=59;
+
+figure;plot3(num1(:,i1),num1(:,i2),num1(:,i3),’.’);grid on;
+hold on;plot3(num2(:,i1),num2(:,i2),num2(:,i3),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+[a1,b1,c1]=xlsread(’randnums1.xls’);
+[a2,b2,c2]=xlsread(’randnums2.xls’);
+
+a1=(a1-mean(a1))/std(a1);
+a2=(a2-mean(a2))/std(a2);
+
+a1=a1/max(abs(a1));
+a2=a2/max(abs(a2));
+
+mn1=mean(num1);
+sd1=std(num1);
+mn2=mean(num2);
+sd2=std(num2);
+
+for jj=1:nn
+  new1(:,jj)=alpha*mn1(jj)+a1(jj)*(num1(:,jj)-mn1(jj))./(1+sd1(jj));
+end
+
+for jj=1:nn
+ neww1(:,jj)=alpha*mn2(jj)+a2(jj)*(num2(:,jj)-mn2(jj))./(1+sd2(jj));
+end
+
+figure;plot3(new1(:,i1),new1(:,i2),new1(:,i3),’.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+hold on;plot3(neww1(:,i1),neww1(:,i2),neww1(:,i3),’r.’);grid on
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+
+%A simple orgthogonality test: dot product must be close to zero
+v1=[new1(:,i1) new1(:,i2) new1(:,i3)];
+v2=[neww1(:,i1) neww1(:,i2) neww1(:,i3)];
+
+
+%calculation of vectors on the planes
+v11=v1(1:end-1,:)-v1(2:end,:);
+v12=v2(1:end-1,:)-v2(2:end,:);
+
+
+%calculation of dot product
+vv=v11.*v12;
+
+
+%check the dot product is close to zero
+uu=sum(vv’);
+mean(uu)
+%close to zero -0.0012
+
+figure;plot(uu);grid on;
+axis([0 1024 -2 2]);

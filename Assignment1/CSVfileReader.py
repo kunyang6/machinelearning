@@ -16,13 +16,19 @@ x = []
 
 y = []
 
-first_index = 1
+first_index = 0
 
-second_index = 2
+second_index = 1
+
+third_index = 2
+
+fourth_index = 3
 
 for line in hardwood:
     x.append(line[first_index])
-    y.append(line[second_index])
+    x.append(line[second_index])
+    y.append(line[third_index])
+    y.append(line[fourth_index])
 
 x1 = []
 
@@ -31,12 +37,9 @@ y1 = []
 
 for line2 in carpet:
     x1.append(line2[first_index])
-    y1.append(line2[second_index])
-
-for i in range(len(x)):
-    sentence = x[i] + " " + x1[i]
-    print(sentence)
-
+    x1.append(line2[second_index])
+    y1.append(line2[third_index])
+    y1.append(line2[fourth_index])
 
 plt.scatter(x, y, label='hardwood', color='blue')
 
@@ -48,6 +51,10 @@ plt.ylabel('observations')
 
 plt.title('Hardwood and Carpet')
 
+print("Waiting...")
+
 plt.legend()
 
 plt.show()
+
+print("Finished......")

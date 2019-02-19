@@ -1,0 +1,192 @@
+clear all;
+close all;
+
+[num1,txt1,raw1]=xlsread(’biltmore31.csv’);
+[num2,txt2,raw2]=xlsread(’MyPrismacolors1.csv’);
+
+nn=64;
+i1=1;i2=22;i3=59;
+
+figure;plot3(num1(:,i1),num1(:,i2),num1(:,i3),’.’);grid on;
+hold on;plot3(num2(:,i1),num2(:,i2),num2(:,i3),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+mn1=mean(num1);
+sd1=std(num1);
+mn2=mean(num2);
+sd2=std(num2);
+
+[a1,b1,c1]=xlsread(’randnums1.xls’);
+[a2,b2,c2]=xlsread(’randnums2.xls’);
+
+a1=(a1-mean(a1))/std(a1);
+a2=(a2-mean(a2))/std(a2);
+
+a1=a1/max(abs(a1));
+a2=a2/max(abs(a2));
+
+
+%%%%%%%%%%% No mean shift and maximum weights
+alpha=0.00001;
+for jj=1:nn
+  new1(:,jj)=alpha*mn1(jj)+(num1(:,jj)-mn1(jj))./(1+sd1(jj));
+end
+
+mcc1=mean(new1);
+scc1=std(new1);
+mm1=length(new1);
+
+randn(’seed’,111);
+for jj=1:nn
+  rr1(:,jj) = mcc1(jj) + scc1(jj).*randn(mm1,1);
+end
+
+rrr1=[new1;rr1];
+
+figure;plot3(rrr1(:,i1),rrr1(:,i2),rrr1(:,i3),’.’);grid on
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+for jj=1:nn
+  neww1(:,jj)=alpha*mn2(jj)+(num2(:,jj)-mn2(jj))./(1+sd2(jj));
+end
+
+mccn1=mean(neww1);
+sccn1=std(neww1);
+mmm1=length(neww1);
+
+randn(’seed’,129);
+for jj=1:nn
+rrn1(:,jj) = mccn1(jj) + sccn1(jj).*randn(mmm1,1);
+end
+
+rrr11=[neww1;rrn1];
+
+hold on;plot3(rrr11(:,i1),rrr11(:,i2),rrr11(:,i3),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+
+
+%%%%%%%%%%% Mean shift and maximum weights
+nn=64;
+i1=1;i2=22;i3=59;
+
+alpha=0.1;
+for jj=1:nn
+  new1(:,jj)=alpha*mn1(jj)+(num1(:,jj)-mn1(jj))./(1+sd1(jj));
+end
+
+mcc1=mean(new1);
+scc1=std(new1);
+mm1=length(new1);
+
+randn(’seed’,111);
+for jj=1:nn
+  rr1(:,jj) = mcc1(jj) + scc1(jj).*randn(mm1,1);
+end
+
+rrr1=[new1;rr1];
+
+figure;plot3(rrr1(:,i1),rrr1(:,i2),rrr1(:,i3),’.’);grid on
+  xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+for jj=1:nn
+  neww1(:,jj)=alpha*mn2(jj)+(num2(:,jj)-mn2(jj))./(1+sd2(jj));
+end
+
+mccn1=mean(neww1);
+sccn1=std(neww1);
+mmm1=length(neww1);
+
+randn(’seed’,129);
+for jj=1:nn
+  rrn1(:,jj) = mccn1(jj) + sccn1(jj).*randn(mmm1,1);
+end
+
+rrr11=[neww1;rrn1];
+
+hold on;plot3(rrr11(:,i1),rrr11(:,i2),rrr11(:,i3),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+
+
+%%%%%%%%%%% No mean shift and Gaussian weights for orthogonality
+nn=64;
+i1=1;i2=22;i3=59;
+
+alpha=0.00001;
+for jj=1:nn
+  new1(:,jj)=alpha*mn1(jj)+a1(jj)*(num1(:,jj)-mn1(jj))./(1+sd1(jj));
+end
+
+mcc1=mean(new1);
+scc1=std(new1);
+mm1=length(new1);
+randn(’seed’,111);
+for jj=1:nn
+  rr1(:,jj) = mcc1(jj) + scc1(jj).*randn(mm1,1);
+end
+
+rrr1=[new1;rr1];
+
+figure;plot3(rrr1(:,i1),rrr1(:,i2),rrr1(:,i3),’.’);grid on
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+for jj=1:nn
+  neww1(:,jj)=alpha*mn2(jj)+a2(jj)*(num2(:,jj)-mn2(jj))./(1+sd2(jj));
+end
+
+mccn1=mean(neww1);
+sccn1=std(neww1);
+mmm1=length(neww1);
+
+randn(’seed’,129);
+for jj=1:nn
+  rrn1(:,jj) = mccn1(jj) + sccn1(jj).*randn(mmm1,1);
+end
+
+rrr11=[neww1;rrn1];
+
+hold on;plot3(rrr11(:,i1),rrr11(:,i2),rrr11(:,i3),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+
+%%%%%%%%%%% Mean shift and Gaussian weights for orthogonality
+nn=64;
+i1=1;i2=22;i3=59;
+
+alpha=0.1;
+for jj=1:nn
+  new1(:,jj)=alpha*mn1(jj)+a1(jj)*(num1(:,jj)-mn1(jj))./(1+sd1(jj));
+end
+
+mcc1=mean(new1);
+scc1=std(new1);
+mm1=length(new1);
+
+randn(’seed’,111);
+for jj=1:nn
+  rr1(:,jj) = mcc1(jj) + scc1(jj).*randn(mm1,1);
+end
+ 
+rrr1=[new1;rr1];
+
+figure;plot3(rrr1(:,i1),rrr1(:,i2),rrr1(:,i3),’.’);grid on
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
+
+for jj=1:nn
+  neww1(:,jj)=alpha*mn2(jj)+a2(jj)*(num2(:,jj)-mn2(jj))./(1+sd2(jj));
+end
+
+mccn1=mean(neww1);
+sccn1=std(neww1);
+mmm1=length(neww1);
+
+randn(’seed’,129);
+for jj=1:nn
+  rrn1(:,jj) = mccn1(jj) + sccn1(jj).*randn(mmm1,1);
+end
+
+rrr11=[neww1;rrn1];
+
+hold on;plot3(rrr11(:,i1),rrr11(:,i2),rrr11(:,i3),’r.’);grid on;
+xlabel(’Feature 1’);ylabel(’Feature 22’);zlabel(’Feature 59’);
